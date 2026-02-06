@@ -17,9 +17,9 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Dosya Kontrolü ve Hazırlık
+    - name: Dosya Hazırlığı
       run: |
-        # Eğer main.py ZATEN VARSA dokunma, yoksa diğer dosyayı main.py yap
+        # main.py yoksa, olan ilk .py dosyasını main.py yap
         if [ ! -f main.py ]; then
           mv *.py main.py
         fi
@@ -29,9 +29,6 @@ jobs:
           echo "flet" > requirements.txt
           echo "supabase" >> requirements.txt
         fi
-        
-        # Dosyaları listele (Loglarda görmek için)
-        ls -R
 
     - name: Install Dependencies
       run: |
@@ -41,12 +38,13 @@ jobs:
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.19.0'
+        # Eski sürüm (3.19.0) yerine en güncel stabil sürümü kullanıyoruz
+        channel: 'stable'
 
     - name: Flet Build APK
       run: |
-        # Gereksiz logları kapatalım, sadece sonuca odaklanalım
-        flet build apk --verbose
+        # "yes" komutu, Flet'in sorduğu tüm sorulara otomatik "y" cevabını verir
+        yes | flet build apk --verbose
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
