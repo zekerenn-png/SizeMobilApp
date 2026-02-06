@@ -17,9 +17,24 @@ jobs:
       with:
         python-version: '3.11'
 
+    - name: Dosya İsimlerini Düzelt (Fix Filenames)
+      run: |
+        # Klasördeki ilk .py dosyasını main.py yap
+        mv *.py main.py
+        
+        # requirements.txt yoksa oluştur
+        if [ ! -f requirements.txt ]; then
+          echo "flet" > requirements.txt
+          echo "supabase" >> requirements.txt
+        fi
+        
+        # Dosyaları listele (Kontrol için)
+        ls -R
+
     - name: Install Dependencies
       run: |
-        pip install flet supabase
+        pip install -r requirements.txt
+        pip install flet
 
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
@@ -28,8 +43,7 @@ jobs:
 
     - name: Flet Build APK
       run: |
-        pip install flet
-        flet build apk
+        flet build apk --verbose
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
