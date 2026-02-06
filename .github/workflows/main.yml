@@ -17,10 +17,12 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Dosya İsimlerini Düzelt (Fix Filenames)
+    - name: Dosya Kontrolü ve Hazırlık
       run: |
-        # Klasördeki ilk .py dosyasını main.py yap
-        mv *.py main.py
+        # Eğer main.py ZATEN VARSA dokunma, yoksa diğer dosyayı main.py yap
+        if [ ! -f main.py ]; then
+          mv *.py main.py
+        fi
         
         # requirements.txt yoksa oluştur
         if [ ! -f requirements.txt ]; then
@@ -28,7 +30,7 @@ jobs:
           echo "supabase" >> requirements.txt
         fi
         
-        # Dosyaları listele (Kontrol için)
+        # Dosyaları listele (Loglarda görmek için)
         ls -R
 
     - name: Install Dependencies
@@ -43,6 +45,7 @@ jobs:
 
     - name: Flet Build APK
       run: |
+        # Gereksiz logları kapatalım, sadece sonuca odaklanalım
         flet build apk --verbose
 
     - name: Upload APK
