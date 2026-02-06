@@ -1,0 +1,38 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Dependencies
+      run: |
+        pip install flet supabase
+
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.19.0'
+
+    - name: Flet Build APK
+      run: |
+        pip install flet
+        flet build apk --project SizeMobil
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: SizeMobil-APK
+        path: build/app/outputs/flutter-apk/app-release.apk
