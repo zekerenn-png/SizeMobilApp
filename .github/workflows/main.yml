@@ -50,4 +50,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: SizeMobil-APK
-        path: build/app/outputs/flutter-apk/app-release.apk
+        # Bu satırı güncelledik: Yıldız işareti ile her yerdeki apk'ları bulur
+        path: "**/app-release.apk"
